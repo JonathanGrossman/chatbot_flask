@@ -1,6 +1,21 @@
+message = "";
+
+var input = document.getElementById("input");
+var button = document.getElementById("button");
+
 function listenForMessage() {
-  console.log("message");
+  message = input.value;
+  console.log(message);
 }
 
-var button = document.getElementById("button");
-button.addEventListener("click", listenForMessage);
+function respondToMessage() {
+  if (input.value === "ddd") {
+    console.log(input.value);
+  } else {
+    console.log("What did you say?");
+  }
+}
+
+input.addEventListener("change", listenForMessage);
+
+button.addEventListener("click", respondToMessage);
