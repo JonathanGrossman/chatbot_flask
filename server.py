@@ -8,11 +8,18 @@ app = Flask(__name__)
 CORS(app)
 
 
+@app.route("/", methods=['GET', 'POST'])
+def hello_handler():
+    if request.method == "POST":
+        print(message)
+    return render_template('index.html')
+
+
 @app.route("/<message>", methods=['GET', 'POST'])
 def message_handler(message):
     if request.method == "POST":
         print(message)
-    return message
+    return "What did you say?"
 
 
 if __name__ == "__main__":
