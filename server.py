@@ -8,17 +8,32 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route("/", methods=['GET', 'POST'])
+connection = sqlite3.connect( ":memory:" )
+cursor = connection.cursor()
+sql_command = """CREATE TABLE messages (
+                    message VARCHAR(300));"""
+cursor.execute(sql_command)
+cursor.execute("INSERT INTO messages VALUES ('hello')")
+cursor.execute("SELECT * FROM messages")
+result = cursor.fetchall()
+
+
+@app.route("/", methods=['GET'])
 def hello_handler():
-    if request.method == "POST":
-        print(message)
     return render_template('index.html')
 
 
-@app.route("/<message>", methods=['GET', 'POST'])
-def message_handler(message):
+@app.route("/message/", methods=['GET', 'POST'])
+def message_handler():
     if request.method == "POST":
-        return "What did you say?"
+        print(request.args.get("message")) 
+        for m in result:
+            print(m)
+        #     if m == message:
+        #         response_message = "You already asked me that."
+        #     else:
+        #         response_message = "What?"
+        return jsonify({"response": "hi"})
 
 
 if __name__ == "__main__":

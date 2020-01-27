@@ -10,7 +10,7 @@ function listenForMessage() {
 }
 
 function respondToMessage() {
-  response.innerText = "What did you say?";
+  response.innerText = "What?";
 }
 
 input.addEventListener("change", listenForMessage);
