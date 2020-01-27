@@ -17,22 +17,26 @@ cursor.execute("INSERT INTO messages VALUES ('hello')")
 cursor.execute("SELECT * FROM messages")
 results = cursor.fetchall()
 
+def add_to_db(new_message):
+    print(new_message)
+    connection = sqlite3.connect( ":memory:" )
+    cursor = connection.cursor()
+    cursor.execute("INSERT INTO messages VALUES (?)," (new_message))
+
+
 @app.route("/", methods=['GET'])
 def hello_handler():
     return render_template('index.html')
 
-
-@app.route("/message/", methods=['GET', 'POST'])
+@app.route("/message/", methods=['GET'])
 def message_handler():
-    global results
     if request.method == "POST":
         user_input = request.args.get("message")
-        print(user_input)
         for m in results:
-            print(m[0])
             if m[0] == user_input:
                 response_message = {"message": "I've already answered that one."}
             else:
+                add_to_db(user_input)
                 response_message = {"message": "What did you say?"}
         return jsonify(response_message)
 
