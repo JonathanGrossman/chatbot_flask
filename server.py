@@ -29,15 +29,15 @@ def message_handler():
         results = cursor.fetchall()
         user_input = request.args.get("message")
         if user_input == 'zohar':
-                r = requests.get('https://boto20.herokuapp.com/message/?message=' + user_input)
-                json_string = json.loads(r.content)
-                response_message = {"message": json_string["message"]}
-                return jsonify(response_message)
+            r = requests.get('https://boto20.herokuapp.com/message/?message=' + user_input)
+            json_string = json.loads(r.content)
+            response_message = {"message": json_string["message"]}
+            return jsonify(response_message)
         if user_input == 'raz':
-                r = requests.get('https://morning-basin-34003.herokuapp.com/message/?message=' + user_input)
-                json_string = json.loads(r.content)
-                response_message = {"message": json_string["message"]}
-                return jsonify(response_message)
+            r = requests.get('https://morning-basin-34003.herokuapp.com/message/?message=' + user_input)
+            json_string = json.loads(r.content)
+            response_message = {"message": json_string["message"]}
+            return jsonify(response_message)
         else:
             for m in results:
                 if m[0] == user_input:
