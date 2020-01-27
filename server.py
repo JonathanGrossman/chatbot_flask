@@ -15,8 +15,7 @@ sql_command = """CREATE TABLE messages (
 cursor.execute(sql_command)
 cursor.execute("INSERT INTO messages VALUES ('hello')")
 cursor.execute("SELECT * FROM messages")
-result = cursor.fetchall()
-
+results = cursor.fetchall()
 
 @app.route("/", methods=['GET'])
 def hello_handler():
@@ -25,15 +24,17 @@ def hello_handler():
 
 @app.route("/message/", methods=['GET', 'POST'])
 def message_handler():
+    global results
     if request.method == "POST":
-        print(request.args.get("message")) 
-        for m in result:
-            print(m)
-        #     if m == message:
-        #         response_message = "You already asked me that."
-        #     else:
-        #         response_message = "What?"
-        return jsonify({"response": "hi"})
+        user_input = request.args.get("message")
+        print(user_input)
+        for m in results:
+            print(m[0])
+            if m[0] == user_input:
+                response_message = {"response": "You already asked me that."}
+            else:
+                response_message = {"response": "What did you say?"}
+        return jsonify(response_message)
 
 
 if __name__ == "__main__":
