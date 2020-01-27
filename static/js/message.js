@@ -1,7 +1,8 @@
 message = "";
 
-var input = document.getElementById("input");
-var button = document.getElementById("button");
+let input = document.getElementById("input");
+let button = document.getElementById("button");
+let response = document.getElementById("response");
 
 function listenForMessage() {
   message = input.value;
@@ -9,13 +10,8 @@ function listenForMessage() {
 }
 
 function respondToMessage() {
-  if (input.value === "ddd") {
-    console.log(input.value);
-  } else {
-    console.log("What did you say?");
-  }
+  response.innerText = "What did you say?";
 }
 
 input.addEventListener("change", listenForMessage);
-
 button.addEventListener("click", respondToMessage);

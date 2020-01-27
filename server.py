@@ -18,8 +18,7 @@ def hello_handler():
 @app.route("/<message>", methods=['GET', 'POST'])
 def message_handler(message):
     if request.method == "POST":
-        print(message)
-    return "What did you say?"
+        return "What did you say?"
 
 
 if __name__ == "__main__":
