@@ -2,6 +2,8 @@ import json
 from flask import Flask, request, render_template, redirect, url_for, jsonify
 from flask_cors import CORS
 from datetime import datetime
+import simplejson as json
+import requests
 import sqlite3
 
 app = Flask(__name__)
@@ -26,13 +28,19 @@ def message_handler():
         cursor.execute("SELECT * FROM messages")
         results = cursor.fetchall()
         user_input = request.args.get("message")
-        for m in results:
-            if m[0] == user_input:
-                response_message = {"message": "I've already answered that one."}
-            else:
-                cursor.execute("INSERT INTO messages VALUES (?)", ([user_input]))
-                response_message = {"message": "What did you say?"}
-        return jsonify(response_message)
+        if user_input == 'zohar':
+                r = requests.get('https://boto20.herokuapp.com/message/?message=' + user_input)
+                json_string = json.loads(r.content)
+                response_message = {"message": json_string["message"]}
+                return jsonify(response_message)
+        else:
+            for m in results:
+                if m[0] == user_input:
+                    response_message = {"message": "I've already answered that one."}
+                else:
+                    cursor.execute("INSERT INTO messages VALUES (?)", ([user_input]))
+                    response_message = {"message": "What did you say?"}
+            return jsonify(response_message)
 
 
 if __name__ == "__main__":
