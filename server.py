@@ -33,6 +33,11 @@ def message_handler():
                 json_string = json.loads(r.content)
                 response_message = {"message": json_string["message"]}
                 return jsonify(response_message)
+        if user_input == 'raz':
+                r = requests.get('https://morning-basin-34003.herokuapp.com/message/?message=' + user_input)
+                json_string = json.loads(r.content)
+                response_message = {"message": json_string["message"]}
+                return jsonify(response_message)
         else:
             for m in results:
                 if m[0] == user_input:
