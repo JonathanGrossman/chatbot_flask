@@ -31,9 +31,9 @@ def message_handler():
         for m in results:
             print(m[0])
             if m[0] == user_input:
-                response_message = {"response": "You already asked me that."}
+                response_message = {"message": "I've already answered that one."}
             else:
-                response_message = {"response": "What did you say?"}
+                response_message = {"message": "What did you say?"}
         return jsonify(response_message)
 
 
