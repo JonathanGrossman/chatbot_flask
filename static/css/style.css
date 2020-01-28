@@ -1,5 +1,5 @@
 body {
-  background: lightslategray;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
 }
 
 .wrapper {
@@ -7,8 +7,78 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  word-wrap: normal;
 }
 
 .input {
-  width: 200px;
+  background: lightslategray;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 14px;
+  margin: 10px;
+  padding: 10px;
+  outline: none;
+  width: 300px;
+}
+
+.input::placeholder {
+  color: white;
+  font-size: 14px;
+}
+
+.button {
+  background: black;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 10px;
+  margin: 10px;
+  outline: none;
+}
+
+.response {
+  border-radius: 5px;
+  box-shadow: 0px 0px 30px 0px rgba(101, 76, 255, 1.4);
+  margin-bottom: 30px;
+  margin-top: 30px;
+  padding: 10px;
+  word-wrap: normal;
+}
+
+.sender_details_wrapper {
+  background: lightslategray;
+  border-radius: 5px;
+  box-shadow: 0px 0px 30px 0px rgba(119, 136, 153, 1);
+  margin-bottom: 50px;
+}
+
+.hidden {
+  display: none;
+}
+
+.details_title {
+  background: gray;
+  font-size: 16px;
+  margin: 1px;
+  padding: 10px;
+  text-align: center;
+  width: 450px;
+}
+
+.sender_details {
+  background: white;
+  font-size: 14px;
+  margin: 1px;
+  padding: 10px;
+  width: 450px;
+}
+
+.database_messages {
+  font-size: 14px;
+  text-align: center;
+  width: 450px;
+  word-wrap: normal;
 }

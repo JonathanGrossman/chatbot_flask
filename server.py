@@ -13,7 +13,8 @@ app = Flask(__name__)
 CORS(app)
 
 response_message = {"message": "What did you say?"}
-urls = ['https://boto20.herokuapp.com/message/?message=', 'https://morning-basin-34003.herokuapp.com/message/?message=', 'https://ancient-fjord-32267.herokuapp.com/message/?message=', 'https://randobot-5000.herokuapp.com/message/?message=', 'https://peaceful-stream-36739.herokuapp.com/?message=zohar']
+# urls = ['https://boto20.herokuapp.com/message/?message=', 'https://morning-basin-34003.herokuapp.com/message/?message=', 'https://ancient-fjord-32267.herokuapp.com/message/?message=', 'https://randobot-5000.herokuapp.com/message/?message=', 'https://peaceful-stream-36739.herokuapp.com/?message=zohar']
+urls = [{"url": 'https://boto20.herokuapp.com/message/?message=', "name": "Zohar"}, {"url": 'https://morning-basin-34003.herokuapp.com/message/?message=', "name": "Raz"}, {"url": 'https://ancient-fjord-32267.herokuapp.com/message/?message=', "name": "Gabe"}, {"url": 'https://randobot-5000.herokuapp.com/message/?message=', "name": "Jonathan"}, {"url": 'https://peaceful-stream-36739.herokuapp.com/?message', "name": "Jack"}]
 
 
 connection = sqlite3.connect("database.db")
@@ -22,11 +23,11 @@ cursor = connection.cursor()
 
 def time_function():
     time_message = ""
-    now = datetime.now()
+    now = datetime.utcnow()
     seconds_since_midnight = (now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds()
+    rounded = round((86400 - seconds_since_midnight) / 60)
     if seconds_since_midnight != 0:
-        print(str(seconds_since_midnight) + " seconds until midnight")
-        return "Sent at " + str(now) + ", which is " + str(seconds_since_midnight) + " seconds until midnight"
+        return "Sent at " + str(now) + ", which is " + str(rounded) + " minutes until midnight (UTC)"
     else:
         return "It's midnight!"
 
@@ -59,7 +60,7 @@ def message_handler():
     
     random_number = randrange(11)
     random_number_urls = randrange(5)
-    url = urls[random_number_urls]
+    url = urls[random_number_urls]["url"]
     
     if request.method == "GET":
         remote_address = request.environ["REMOTE_ADDR"]
@@ -75,12 +76,12 @@ def message_handler():
         if random_number == 2:
             response = requests.get(url + user_input)
             json_string = json.loads(response.content)
-            response_message = {"message": json_string["message"], "sender_address": remote_address, "sender_port": remote_port, "time": time_function(), "database_messages": get_database_messages()}
+            response_message = {"message": json_string["message"], "message_origin": "A message from: " + urls[random_number_urls]["name"], "sender_address": remote_address, "sender_port": remote_port, "time": time_function()}
         else:
             if user_input not in (item[0] for item in results):
-                response_message = {"message": "What did you say?", "sender_address": remote_address, "sender_port": remote_port, "time": time_function(), "database_messages": get_database_messages()}
+                response_message = {"message": "What did you say?", "message_origin": "A message from this bot.", "sender_address": remote_address, "sender_port": remote_port, "time": time_function()}
             else:
-                response_message = {"message": "I've already answered that one.", "sender_address": remote_address, "sender_port": remote_port, "time": time_function(), "database_messages": get_database_messages()}
+                response_message = {"message": "I've already answered that one.", "message_origin": "A message from this bot.", "sender_address": remote_address, "sender_port": remote_port, "time": time_function()}
         return jsonify(response_message)
 
 if __name__ == "__main__":
