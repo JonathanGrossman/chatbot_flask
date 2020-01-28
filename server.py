@@ -40,6 +40,17 @@ scheduler.start()
 def home_handler():
     return render_template("index.html")
 
+@app.route("/database", methods=['GET'])
+def get_database_messages():
+    connection = sqlite3.connect("database.db")
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM messages")
+    results = cursor.fetchall()
+    message_array = []
+    for message in results:
+        if message[0] != "undefined" and message[0] != "null":
+            message_array.append(message[0])
+    return jsonify({ "database_messages": message_array})
 
 
 @app.route("/message/", methods=['GET'])
@@ -64,12 +75,12 @@ def message_handler():
         if random_number == 2:
             response = requests.get(url + user_input)
             json_string = json.loads(response.content)
-            response_message = {"message": json_string["message"], "sender_address": remote_address, "sender_port": remote_port, "time": time_function()}
+            response_message = {"message": json_string["message"], "sender_address": remote_address, "sender_port": remote_port, "time": time_function(), "database_messages": get_database_messages()}
         else:
             if user_input not in (item[0] for item in results):
-                response_message = {"message": "What did you say?", "sender_address": remote_address, "sender_port": remote_port, "time": time_function()}
+                response_message = {"message": "What did you say?", "sender_address": remote_address, "sender_port": remote_port, "time": time_function(), "database_messages": get_database_messages()}
             else:
-                response_message = {"message": "I've already answered that one.", "sender_address": remote_address, "sender_port": remote_port, "time": time_function()}
+                response_message = {"message": "I've already answered that one.", "sender_address": remote_address, "sender_port": remote_port, "time": time_function(), "database_messages": get_database_messages()}
         return jsonify(response_message)
 
 if __name__ == "__main__":
