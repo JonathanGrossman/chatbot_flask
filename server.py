@@ -13,6 +13,14 @@ app = Flask(__name__)
 CORS(app)
 
 
+# url = 'https://chatbot-discovery.herokuapp.com/'
+# api = 'api/discovery'
+# endpoint = {'endpoint': 'ENTER YOUR ENDPOINT URL HERE'}
+# post = requests.post(url + api, json=endpoint)
+# print(post.text)
+# get = requests.get(url + api)
+# print(get.text)
+
 response_message = {"message": "What did you say?"}
 urls = ['https://boto20.herokuapp.com/message/?message=', 'https://morning-basin-34003.herokuapp.com/message/?message=']
 
