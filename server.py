@@ -12,17 +12,8 @@ from random import randrange
 app = Flask(__name__)
 CORS(app)
 
-
-# url = 'https://chatbot-discovery.herokuapp.com/'
-# api = 'api/discovery'
-# endpoint = {'endpoint': 'ENTER YOUR ENDPOINT URL HERE'}
-# post = requests.post(url + api, json=endpoint)
-# print(post.text)
-# get = requests.get(url + api)
-# print(get.text)
-
 response_message = {"message": "What did you say?"}
-urls = ['https://boto20.herokuapp.com/message/?message=', 'https://morning-basin-34003.herokuapp.com/message/?message=']
+urls = ['https://boto20.herokuapp.com/message/?message=', 'https://morning-basin-34003.herokuapp.com/message/?message=', 'https://ancient-fjord-32267.herokuapp.com/message/?message=', 'https://randobot-5000.herokuapp.com/message/?message=', 'https://peaceful-stream-36739.herokuapp.com/?message=zohar']
 
 
 connection = sqlite3.connect("database.db")
@@ -52,29 +43,31 @@ def hello_function():
 @app.route("/message/", methods=['GET'])
 def message_handler():
     global response_message
+    
     random_number = randrange(11)
-    random_number_urls = randrange(2)
+    random_number_urls = randrange(5)
     url = urls[random_number_urls]
     
     if request.method == "GET":
+        remote_address = request.environ["REMOTE_ADDR"]
+        remote_port = request.environ["REMOTE_PORT"]
         user_input = request.args.get("message")
         connection = sqlite3.connect("database.db")
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM messages")
         results = cursor.fetchall()
-        print(results)
         if user_input not in (item[0] for item in results):
             cursor.execute('INSERT INTO messages VALUES (?)', ([user_input]))
             connection.commit()     
         if random_number == 2:
             response = requests.get(url + user_input)
             json_string = json.loads(response.content)
-            response_message = {"message": json_string["message"]}
+            response_message = {"message": json_string["message"], "sender_address": remote_address, "sender_port": remote_port}
         else:
             if user_input not in (item[0] for item in results):
-                response_message = {"message": "What did you say?"}
+                response_message = {"message": "What did you say?", "sender_address": remote_address, "sender_port": remote_port}
             else:
-                response_message = {"message": "I've already answered that one."}
+                response_message = {"message": "I've already answered that one.", "sender_address": remote_address, "sender_port": remote_port}
         return jsonify(response_message)
 
 
