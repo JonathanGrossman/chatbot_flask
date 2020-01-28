@@ -27,9 +27,13 @@ def time_function():
     seconds_since_midnight = (now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds()
     rounded = round((86400 - seconds_since_midnight) / 60)
     if seconds_since_midnight != 0:
-        return "Sent at " + str(now) + ", which is " + str(rounded) + " minutes until midnight (UTC)"
+        return "Sent at " + str(now) + ", which is " + str(rounded) + " minutes until midnight (UTC). At midnight UTC, I ping a random bot and return its message here."
     else:
-        return "It's midnight!"
+        random_number_urls = randrange(5)
+        url = urls[random_number_urls]["url"]
+        response = requests.get(url + "hi")
+        json_string = json.loads(response.content)
+        return "It's midnight! " + urls[random_number_urls]["name"] + " says " + json_string["message"]
 
 
 scheduler = BackgroundScheduler()
