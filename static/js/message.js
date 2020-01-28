@@ -2,16 +2,22 @@ message = "";
 
 let input = document.getElementById("input");
 let button = document.getElementById("button");
-let response = document.getElementById("response");
+let response_html = document.getElementById("response");
+let sender_address = document.getElementById("sender_address");
+let sender_port = document.getElementById("sender_port");
+let time = document.getElementById("time");
 
 function listenForMessage() {
   message = input.value;
-  console.log(message);
+  fetch("/message/?message=" + message).then(response =>
+    response.json().then(json => {
+      (response_html.innerText = json.message),
+        (sender_address.innerText =
+          "Sent fromp IP address: " + json.sender_address),
+        (sender_port.innerText = "Sent fromp port: " + json.sender_port),
+        (time.innerText = json.time);
+    })
+  );
 }
 
-function respondToMessage() {
-  response.innerText = "What?";
-}
-
-input.addEventListener("change", listenForMessage);
-button.addEventListener("click", respondToMessage);
+button.addEventListener("click", listenForMessage);

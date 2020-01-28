@@ -26,18 +26,20 @@ def time_function():
     seconds_since_midnight = (now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds()
     if seconds_since_midnight != 0:
         print(str(seconds_since_midnight) + " seconds until midnight")
+        return "Sent at " + str(now) + ", which is " + str(seconds_since_midnight) + " seconds until midnight"
     else:
-        print("It's midnight!")
+        return "It's midnight!"
 
 
 scheduler = BackgroundScheduler()
 job = scheduler.add_job(time_function, 'interval', minutes=1)
-scheduler.start()
+scheduler.start()  
 
 
 @app.route("/", methods=['GET'])
-def hello_function(): 
-    return redirect(url_for("message_handler"))
+def home_handler():
+    return render_template("index.html")
+
 
 
 @app.route("/message/", methods=['GET'])
@@ -62,14 +64,13 @@ def message_handler():
         if random_number == 2:
             response = requests.get(url + user_input)
             json_string = json.loads(response.content)
-            response_message = {"message": json_string["message"], "sender_address": remote_address, "sender_port": remote_port}
+            response_message = {"message": json_string["message"], "sender_address": remote_address, "sender_port": remote_port, "time": time_function()}
         else:
             if user_input not in (item[0] for item in results):
-                response_message = {"message": "What did you say?", "sender_address": remote_address, "sender_port": remote_port}
+                response_message = {"message": "What did you say?", "sender_address": remote_address, "sender_port": remote_port, "time": time_function()}
             else:
-                response_message = {"message": "I've already answered that one.", "sender_address": remote_address, "sender_port": remote_port}
+                response_message = {"message": "I've already answered that one.", "sender_address": remote_address, "sender_port": remote_port, "time": time_function()}
         return jsonify(response_message)
-
 
 if __name__ == "__main__":
     app.run(host="localhost", port=7000, debug=True, use_reloader=False)
